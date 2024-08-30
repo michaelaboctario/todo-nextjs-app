@@ -1,0 +1,11 @@
+.container {
+    width: 340px;
+    height: 540px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #e0b389;
+    /* background-image: linear-gradient( 10deg, #f5f7a5 0%, #b0e276 100%); */
+  }
