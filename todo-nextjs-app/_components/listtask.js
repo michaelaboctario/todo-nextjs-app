@@ -1,33 +1,62 @@
-import './listtask.css'
-
 import { useState } from 'react';
-let nextId = 0;
 
-export default function ListTask () {
-  const [task, setTask] = useState('');
-  const [list, setList] = useState([]);
-
+export default function ListTask({tasks, onChangeTask, onDeleteTask}) {
+  //console.log(onChangeTask);
   return (
-    <>
-      <h3>Task to do:</h3>
-      <div className='listtask'>
-        <input
-            value={task}
-            onChange={e => setTask(e.target.value)}
+    <ul>
+      {tasks && tasks.map((task) => (
+        <li key={task.id}>
+          <Task task={task} onChange={onChangeTask} onDelete={onDeleteTask} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function Task({task, onChange, onDelete}) {
+  const [isEditing, setIsEditing] = useState(false);
+  let taskContent;
+  if (isEditing) {
+    //console.log(onChange);
+    taskContent = (
+      <>
+        <input className='inputtask'
+          value={task.task}
+          onChange={(e) => {
+            onChange({
+              ...task,
+              task: e.target.value,
+            });
+          }}
         />
-        <button onClick={() => {
-            setList([
-            ...list,
-            { id: nextId++, task: task }
-            ]);
-            setTask("");
-        }}>Add</button>
-        </div>    
-        <ul className='itemtask'>
-            {list.map(item => (
-            <li key={item.id}>{item.task}</li>
-            ))}
-        </ul>
-    </>
+        <button onClick={() => setIsEditing(false)}>Save</button>
+      </>
+    );
+  } else {
+    taskContent = (
+      <>
+        {task.task}
+        <button onClick={() => setIsEditing(true)}>Edit</button>
+      </>
+    );
+  }
+  return (
+    <div className='listtask'>
+      <label>
+        <input 
+          type="checkbox"
+          checked={task.done}
+          onChange={(e) => {
+            onChange({
+              ...task,
+              done: e.target.checked,
+            });
+          }}
+        />
+        {taskContent}
+        <button onClick={() => onDelete(task.id)}>Delete</button>
+       </label>
+    </div>
+
   );
 }
